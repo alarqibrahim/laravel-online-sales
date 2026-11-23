@@ -12,27 +12,24 @@ class ShippingServiceController extends Controller
 {
     public function index(): View
     {
-        $shippingServices = ShippingService::orderBy('courier')->orderBy('service')->get();
+        $shippingServices = ShippingService::orderBy('courier')
+            ->orderBy('service')
+            ->get();
 
         return view('admin.shipping_services.index', compact('shippingServices'));
-    }
-
-    public function create(): View
-    {
-        return view('admin.shipping_services.create');
     }
 
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'courier' => ['required', 'string', 'max:80'],
-            'service' => ['required', 'string', 'max:80'],
-            'eta' => ['nullable', 'string', 'max:60'],
+            'courier' => ['required', 'string', 'max:100'],
+            'service' => ['required', 'string', 'max:100'],
+            'eta' => ['nullable', 'string', 'max:100'],
             'cost' => ['required', 'numeric', 'min:0'],
-            'is_active' => ['nullable', 'boolean'],
+            'is_active' => ['nullable'],
         ]);
 
-        $validated['is_active'] = $request->boolean('is_active', true);
+        $validated['is_active'] = $request->boolean('is_active', false);
 
         ShippingService::create($validated);
 
@@ -41,19 +38,14 @@ class ShippingServiceController extends Controller
             ->with('success', 'Layanan ekspedisi berhasil ditambahkan.');
     }
 
-    public function edit(ShippingService $shippingService): View
-    {
-        return view('admin.shipping_services.edit', compact('shippingService'));
-    }
-
     public function update(Request $request, ShippingService $shippingService): RedirectResponse
     {
         $validated = $request->validate([
-            'courier' => ['required', 'string', 'max:80'],
-            'service' => ['required', 'string', 'max:80'],
-            'eta' => ['nullable', 'string', 'max:60'],
+            'courier' => ['required', 'string', 'max:100'],
+            'service' => ['required', 'string', 'max:100'],
+            'eta' => ['nullable', 'string', 'max:100'],
             'cost' => ['required', 'numeric', 'min:0'],
-            'is_active' => ['nullable', 'boolean'],
+            'is_active' => ['nullable'],
         ]);
 
         $validated['is_active'] = $request->boolean('is_active', false);
